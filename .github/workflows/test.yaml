@@ -10,19 +10,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: raviqqe/enable-homebrew@main
-      - run: brew install pen-lang/pen
+      - run: brew install pen-lang/pen/pen
       - run: pen build
   test:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: raviqqe/enable-homebrew@main
-      - run: brew install pen-lang/pen
+      - run: brew install pen-lang/pen/pen
       - run: pen test
   format:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - uses: raviqqe/enable-homebrew@main
-      - run: brew install pen-lang/pen
+      - run: brew install pen-lang/pen/pen
       - run: pen format --check
