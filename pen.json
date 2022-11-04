@@ -1,6 +1,10 @@
 {
   "type": "application",
   "dependencies": {
-    "Os": "pen:///os"
+    "Core": "pen:///core",
+    "Http": "pen:///http",
+    "Os": "pen:///os",
+    "Sql": "pen:///sql",
+    "Test": "pen:///test"
   }
 }
