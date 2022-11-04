@@ -26,3 +26,15 @@ jobs:
       - uses: raviqqe/enable-homebrew@main
       - run: brew install pen-lang/pen/pen
       - run: pen format --check
+  spell_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: streetsidesoftware/cspell-action@main
+        with:
+          files: "**/*.{md,pen,sh}"
+  readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: npx markdown-link-check README.md
