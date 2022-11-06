@@ -1,15 +1,12 @@
+import Core'String
 import Sql'Context { Context }
 import Sql'Pool { Pool }
 import Sql'Pool'Options { Options }
+import Sql'Value { Value }
 
 type Storage {
+  context Context
   pool Pool
-}
-
-New = \(context Context, uri string) Storage | error {
-  Storage{
-    pool: Pool'New(context, uri, defaultOptions())?,
-  }
 }
 
 defaultOptions = \() Options {
@@ -18,4 +15,30 @@ defaultOptions = \() Options {
     MaxConnections: 512,
     ConnectTimeout: 500,
   }
+}
+
+New = \(ctx Context, uri string) Storage | error {
+  Storage{
+    context: ctx,
+    pool: Pool'New(ctx, uri, defaultOptions())?,
+  }
+}
+
+Save = \(s Storage, table string, x {string: Value}) none | error {
+  Pool'Execute(s.context, s.pool, buildQuery(table, x), [Value v for _, v in x])?
+
+  none
+}
+
+Find = \(s Storage, k [string]) {string: any} | error {
+  {string: any}
+}
+
+buildQuery = \(table string, x {string: Value}) string {
+  "insert into " + table
+    + "("
+    + String'Join([string k for k, _ in x], ",")
+    + ") values ("
+    + String'Join([string "?" for _, _ in x], ",")
+    + ")"
 }
