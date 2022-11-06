@@ -1,7 +1,20 @@
+import Os'Environment
 import Os'File
+import Os'Process
+
+import 'storage
 
 main = \(ctx context) none {
-  _ = File'Write(ctx.Os, File'StdOut(), "Hello, world!\n")
+  if e = run(ctx) as none {
+    none
+  } else {
+    debug(e)
+    Process'Exit(ctx.Os, 1)
+  }
+}
+
+run = \(ctx context) none | error {
+  s = storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)
 
   none
 }
