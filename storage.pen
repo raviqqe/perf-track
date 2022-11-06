@@ -1,0 +1,21 @@
+import Sql'Context { Context }
+import Sql'Pool { Pool }
+import Sql'Pool'Options { Options }
+
+type Storage {
+  pool Pool
+}
+
+New = \(context Context, uri string) Storage | error {
+  Storage{
+    pool: Pool'New(context, uri, defaultOptions())?,
+  }
+}
+
+defaultOptions = \() Options {
+  Options{
+    MinConnections: 8,
+    MaxConnections: 512,
+    ConnectTimeout: 500,
+  }
+}

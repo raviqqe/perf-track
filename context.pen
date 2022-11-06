@@ -1,0 +1,5 @@
+import 'storage { Storage }
+
+type context {
+  storage Storage
+}
