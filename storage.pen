@@ -25,7 +25,7 @@ New = \(ctx Context, uri string) Storage | error {
 }
 
 Save = \(s Storage, table string, x {string: Value}) none | error {
-  Pool'Execute(s.context, s.pool, buildQuery(table, x), [Value v for _, v in x])?
+  Pool'Execute(s.context, s.pool, saveQuery(table, x), [Value v for _, v in x])?
 
   none
 }
@@ -34,7 +34,7 @@ Find = \(s Storage, k [string]) {string: any} | error {
   {string: any}
 }
 
-buildQuery = \(table string, x {string: Value}) string {
+saveQuery = \(table string, x {string: Value}) string {
   "insert into " + table
     + "("
     + String'Join([string k for k, _ in x], ",")
