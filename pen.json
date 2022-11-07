@@ -2,6 +2,7 @@
   "type": "application",
   "dependencies": {
     "Core": "pen:///core",
+    "Json": "pen:///json",
     "Http": "pen:///http",
     "Os": "pen:///os",
     "Sql": "pen:///sql",

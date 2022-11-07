@@ -5,7 +5,7 @@ import Json'Value { Value }
 import 'metric { Metric }
 
 Serialize = \(m Metric) string {
-  Encode()
+  Encode({string: Value "id": m.Id})
 }
 
 Deserialize = \(s string) Metric | error {
