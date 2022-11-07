@@ -1,6 +1,6 @@
 import 'database { Database, Value }
 import 'database'utility
-import 'metric { Metric }
+import 'metric { Metric, MetricInput }
 import 'repository'metric { MetricRepository }
 
 type DatabaseMetricRepository {
@@ -13,8 +13,8 @@ New = \(d Database) DatabaseMetricRepository {
   DatabaseMetricRepository{database: d}
 }
 
-Create = \(r DatabaseMetricRepository) Metric | error {
-  error("not implemented")
+Create = \(r DatabaseMetricRepository, m MetricInput) none | error {
+  database'Create(r.database, tableName(), {string: Value "name": m.Name})
 }
 
 Find = \(r DatabaseMetricRepository, id string) Metric | error {
