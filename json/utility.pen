@@ -1,0 +1,9 @@
+import Json'Value { Value }
+
+Field = \(o {string: Value}, s string) Value | error {
+  if v = o[s] {
+    v
+  } else {
+    error(s + " not found")
+  }
+}

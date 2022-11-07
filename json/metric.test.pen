@@ -1,0 +1,14 @@
+import Test'Assert
+
+import 'json'metric
+import 'metric { Metric }
+
+Serialize = \() none | error {
+  Assert'Equal(metric'Serialize(Metric{Id: "foo"}), "{\"id\":\"foo\"}")
+}
+
+Deserialize = \() none | error {
+  m = Metric{Id: "foo"}
+
+  Assert'Equal(metric'Deserialize(metric'Serialize(m)), m)
+}

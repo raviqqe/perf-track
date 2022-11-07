@@ -2,12 +2,17 @@ import Json'Decode { Decode }
 import Json'Encode { Encode }
 import Json'Value { Value }
 
+import 'json'utility { Field }
 import 'metric { Metric }
 
 Serialize = \(m Metric) string {
-  Encode({string: Value "id": m.Id})
+  Encode(Value'New({string: Value "id": Value'New(m.Id)}))
 }
 
 Deserialize = \(s string) Metric | error {
-  Decode(s)
+  o = if v = Value'Raw(Decode(s)?) as {string: Value} { v } else { error("object expected") }?
+
+  Metric{
+    Id: if s = Value'Raw(Field(o, "id")?) as string { s } else { error("string expected") }?,
+  }
 }

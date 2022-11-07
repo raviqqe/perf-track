@@ -1,0 +1,28 @@
+import Json'Decode { Decode }
+import Json'Encode { Encode }
+import Json'Value { Value }
+
+import 'json'utility { Field }
+import 'record { Record }
+
+Serialize = \(r Record) string {
+  Encode(
+    Value'New(
+      {string: Value
+        "metricId": Value'New(r.MetricId),
+        "commitHash": Value'New(r.CommitHash),
+        "time": Value'New(r.Time),
+      },
+    ),
+  )
+}
+
+Deserialize = \(s string) Record | error {
+  o = if v = Value'Raw(Decode(s)?) as {string: Value} { v } else { error("object expected") }?
+
+  Record{
+    MetricId: if s = Value'Raw(Field(o, "metricId")?) as string { s } else { error("string expected") }?,
+    CommitHash: if s = Value'Raw(Field(o, "commitHash")?) as string { s } else { error("string expected") }?,
+    Time: if s = Value'Raw(Field(o, "time")?) as number { s } else { error("number expected") }?,
+  }
+}
