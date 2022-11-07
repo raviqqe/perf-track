@@ -2,7 +2,7 @@ import Json'Decode { Decode }
 import Json'Encode { Encode }
 import Json'Value { Value }
 
-import 'json'utility { Field }
+import 'json'utility
 import 'record { Record }
 
 Serialize = \(r Record) string {
@@ -18,11 +18,11 @@ Serialize = \(r Record) string {
 }
 
 Deserialize = \(s string) Record | error {
-  o = if v = Value'Raw(Decode(s)?) as {string: Value} { v } else { error("object expected") }?
+  o = utility'Object(Decode(s)?)?
 
   Record{
-    MetricId: if s = Value'Raw(Field(o, "metricId")?) as string { s } else { error("string expected") }?,
-    CommitHash: if s = Value'Raw(Field(o, "commitHash")?) as string { s } else { error("string expected") }?,
-    Time: if s = Value'Raw(Field(o, "time")?) as number { s } else { error("number expected") }?,
+    MetricId: utility'String(utility'Field(o, "metricId")?)?,
+    CommitHash: utility'String(utility'Field(o, "commitHash")?)?,
+    Time: utility'Number(utility'Field(o, "time")?)?,
   }
 }

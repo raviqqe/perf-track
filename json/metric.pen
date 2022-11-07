@@ -2,7 +2,7 @@ import Json'Decode { Decode }
 import Json'Encode { Encode }
 import Json'Value { Value }
 
-import 'json'utility { Field }
+import 'json'utility
 import 'metric { Metric }
 
 Serialize = \(m Metric) string {
@@ -10,9 +10,9 @@ Serialize = \(m Metric) string {
 }
 
 Deserialize = \(s string) Metric | error {
-  o = if v = Value'Raw(Decode(s)?) as {string: Value} { v } else { error("object expected") }?
+  o = utility'Object(Decode(s)?)?
 
   Metric{
-    Id: if s = Value'Raw(Field(o, "id")?) as string { s } else { error("string expected") }?,
+    Id: utility'String(utility'Field(o, "id")?)?,
   }
 }
