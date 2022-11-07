@@ -2,7 +2,8 @@ import Core'String
 import Sql'Context { Context }
 import Sql'Pool { Pool }
 import Sql'Pool'Options { Options }
-import Sql'Value as Sql
+
+type Value = boolean | none | number | string
 
 type Storage {
   context Context
@@ -24,9 +25,9 @@ New = \(ctx Context, uri string) Storage | error {
   }
 }
 
-Find = \(s Storage, table string, k {string: Sql'Value}) {string: Sql'Value} | error {
+Find = \(s Storage, table string, k {string: Value}) {string: Value} | error {
   ks = [string k for k, _ in k]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Sql'Value v for _, v in k])?
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in k])?
 
   if [x, ...xs] = xs {
     if [_, ..._] = xs {
@@ -44,12 +45,12 @@ findQuery = \(table string, ks [string]) string {
     + String'Join([string k() + " = ?" for k in ks], " and ")
 }
 
-Save = \(s Storage, table string, x {string: Sql'Value}) none | error {
+Save = \(s Storage, table string, x {string: Value}) none | error {
   Pool'Execute(
     s.context,
     s.pool,
     saveQuery(table, [string k for k, _ in x]),
-    [Sql'Value v for _, v in x],
+    [Value v for _, v in x],
   )?
 
   none
@@ -64,14 +65,14 @@ saveQuery = \(table string, ks [string]) string {
     + ")"
 }
 
-buildValue = \(ks [string], vs [Sql'Value]) {string: Sql'Value} | error {
+buildValue = \(ks [string], vs [Value]) {string: Value} | error {
   if [k, ...ks] = ks {
     if [v, ...vs] = vs {
-      {string: Sql'Value ...buildValue(ks, vs)?, k(): v()}
+      {string: Value ...buildValue(ks, vs)?, k(): v()}
     } else {
       error("unmatched key and value counts")
     }
   } else {
-    {string: Sql'Value}
+    {string: Value}
   }
 }
