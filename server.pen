@@ -17,7 +17,7 @@ New = \(ctx Context, s Storage, l Logger) Server {
 }
 
 Serve = \(s Server, address string) none | error {
-  logger'Info(s.logger, "Serving at " + address + "\n")
+  logger'Info(s.logger, "serving at " + address)
 
   Server'Serve(
     s.context,
