@@ -1,0 +1,20 @@
+import Os'Context { Context }
+import Os'File
+
+type Logger {
+  context Context
+}
+
+New = \(ctx Context) Logger {
+  Logger{context: ctx}
+}
+
+Info = \(l Logger, s string) none {
+  print(l, "info", s)
+}
+
+print = \(l Logger, level string, s string) none {
+  _ = File'Write(l.context, File'StdOut(), level + ": " + s + "\n")
+
+  none
+}

@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
       - uses: raviqqe/enable-homebrew@main
       - run: brew install pen-lang/pen/pen
       - run: pen build
@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
       - uses: raviqqe/enable-homebrew@main
       - run: brew install pen-lang/pen/pen
       - run: pen test

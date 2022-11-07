@@ -1,0 +1,5 @@
+type Record {
+  MetricId string
+  CommitHash string
+  Time number
+}

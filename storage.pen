@@ -1,0 +1,78 @@
+import Core'String
+import Sql'Context { Context }
+import Sql'Pool { Pool }
+import Sql'Pool'Options { Options }
+
+type Value = boolean | none | number | string
+
+type Storage {
+  context Context
+  pool Pool
+}
+
+defaultOptions = \() Options {
+  Options{
+    MinConnections: 8,
+    MaxConnections: 512,
+    ConnectTimeout: 500,
+  }
+}
+
+New = \(ctx Context, uri string) Storage | error {
+  Storage{
+    context: ctx,
+    pool: Pool'New(ctx, uri, defaultOptions())?,
+  }
+}
+
+Find = \(s Storage, table string, k {string: Value}) {string: Value} | error {
+  ks = [string k for k, _ in k]
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in k])?
+
+  if [x, ...xs] = xs {
+    if [_, ..._] = xs {
+      error(table + " not found")
+    } else {
+      buildValue(ks, x())
+    }
+  } else {
+    error(table + " not found")
+  }
+}
+
+findQuery = \(table string, ks [string]) string {
+  "select * from " + table + " where"
+    + String'Join([string k() + " = ?" for k in ks], " and ")
+}
+
+Save = \(s Storage, table string, x {string: Value}) none | error {
+  Pool'Execute(
+    s.context,
+    s.pool,
+    saveQuery(table, [string k for k, _ in x]),
+    [Value v for _, v in x],
+  )?
+
+  none
+}
+
+saveQuery = \(table string, ks [string]) string {
+  "insert into " + table
+    + "("
+    + String'Join(ks, ",")
+    + ") values ("
+    + String'Join([string "?" for _ in ks], ",")
+    + ")"
+}
+
+buildValue = \(ks [string], vs [Value]) {string: Value} | error {
+  if [k, ...ks] = ks {
+    if [v, ...vs] = vs {
+      {string: Value ...buildValue(ks, vs)?, k(): v()}
+    } else {
+      error("unmatched key and value counts")
+    }
+  } else {
+    {string: Value}
+  }
+}

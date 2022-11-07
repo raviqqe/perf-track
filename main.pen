@@ -1,7 +1,30 @@
+import Http'Request { Request }
+import Http'Response { Response }
+import Http'Server
+import Os'Environment
 import Os'File
+import Os'Process
+
+import 'logger
+import 'server
+import 'storage
 
 main = \(ctx context) none {
-  _ = File'Write(ctx.Os, File'StdOut(), "Hello, world!\n")
+  if e = run(ctx) as none {
+    none
+  } else {
+    debug(e)
+    Process'Exit(ctx.Os, 1)
+  }
+}
 
-  none
+run = \(ctx context) none | error {
+  server'Serve(
+    server'New(
+      ctx.Http,
+      storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?,
+      logger'New(ctx.Os),
+    ),
+    Environment'Variable(ctx.Os, "SERVER_ADDRESS")?,
+  )
 }
