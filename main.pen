@@ -19,8 +19,12 @@ main = \(ctx context) none {
 }
 
 run = \(ctx context) none | error {
-  s = storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?
-  l = logger'New(ctx.Os)
-
-  server'Serve(server'New(ctx.Http, s, l), Environment'Variable(ctx.Os, "SERVER_ADDRESS")?)
+  server'Serve(
+    server'New(
+      ctx.Http,
+      storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?,
+      logger'New(ctx.Os),
+    ),
+    Environment'Variable(ctx.Os, "SERVER_ADDRESS")?,
+  )
 }
