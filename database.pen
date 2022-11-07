@@ -45,7 +45,7 @@ findQuery = \(table string, ks [string]) string {
     + String'Join([string k() + " = ?" for k in ks], " and ")
 }
 
-Save = \(s Database, table string, x {string: Value}) none | error {
+Create = \(s Database, table string, x {string: Value}) none | error {
   Pool'Execute(
     s.context,
     s.pool,

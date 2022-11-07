@@ -1,0 +1,7 @@
+import 'database { Database }
+import 'metric { Metric }
+
+type metricRepository {
+  Create \(Metric) none | error
+  Find \(string) Metric | error
+}
