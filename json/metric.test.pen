@@ -4,11 +4,18 @@ import 'json'metric
 import 'metric { Metric }
 
 Serialize = \() none | error {
-  Assert'Equal(metric'Serialize(Metric{Id: "foo"}), "{\"id\":\"foo\"}")
+  Assert'Equal(
+    metric'Serialize(metric()),
+    "{\"id\":\"foo\",\"name\":\"bar\"}",
+  )
 }
 
 Deserialize = \() none | error {
-  m = Metric{Id: "foo"}
+  m = metric()
 
   Assert'Equal(metric'Deserialize(metric'Serialize(m)), m)
+}
+
+metric = \() Metric {
+  Metric{Id: "foo", Name: "bar"}
 }

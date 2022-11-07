@@ -1,0 +1,27 @@
+import 'database { Database, Value }
+import 'database'utility
+import 'metric { Metric }
+import 'repository'metric { MetricRepository }
+
+type DatabaseMetricRepository {
+  database Database
+}
+
+tableName = \() string { "metric" }
+
+New = \(d Database) DatabaseMetricRepository {
+  DatabaseMetricRepository{database: d}
+}
+
+Create = \(r DatabaseMetricRepository) Metric | error {
+  error("not implemented")
+}
+
+Find = \(r DatabaseMetricRepository, id string) Metric | error {
+  x = database'Find(r.database, tableName(), {string: Value "id": id})?
+
+  Metric{
+    Id: utility'String(utility'Column(x, "id")?)?,
+    Name: utility'String(utility'Column(x, "name")?)?,
+  }
+}

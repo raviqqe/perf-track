@@ -6,7 +6,14 @@ import 'json'utility
 import 'metric { Metric }
 
 Serialize = \(m Metric) string {
-  Encode(Value'New({string: Value "id": Value'New(m.Id)}))
+  Encode(
+    Value'New(
+      {string: Value
+        "id": Value'New(m.Id),
+        "name": Value'New(m.Name),
+      },
+    ),
+  )
 }
 
 Deserialize = \(s string) Metric | error {
@@ -14,5 +21,6 @@ Deserialize = \(s string) Metric | error {
 
   Metric{
     Id: utility'String(utility'Field(o, "id")?)?,
+    Name: utility'String(utility'Field(o, "name")?)?,
   }
 }

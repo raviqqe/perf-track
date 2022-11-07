@@ -1,9 +1,10 @@
 CREATE TABLE IF NOT EXISTS metric (
-    id serial
+    id serial,
+    name text UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS record (
-    id serial,
+    metricId serial REFERENCES metric (id),
     commit_hash text,
     time integer
 );

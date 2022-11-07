@@ -1,0 +1,25 @@
+import 'database { Value }
+
+Column = \(x {string: Value}, s string) Value | error {
+  if c = x[s] {
+    c
+  } else {
+    error("column " + s + " not found")
+  }
+}
+
+Number = \(v Value) number | error {
+  if v = v as number {
+    v
+  } else {
+    error("number expected")
+  }
+}
+
+String = \(v Value) string | error {
+  if v = v as string {
+    v
+  } else {
+    error("string expected")
+  }
+}
