@@ -1,0 +1,33 @@
+import Http'Context { Context }
+import Http'Request { Request }
+import Http'Response { Response }
+import Http'Server
+
+import 'logger { Logger }
+import 'storage { Storage }
+
+type Server {
+  context Context
+  storage Storage
+  logger Logger
+}
+
+New = \(ctx Context, s Storage, l Logger) Server {
+  Server{context: ctx, storage: s, logger: l}
+}
+
+Serve = \(s Server, address string) none | error {
+  logger'Info(s.logger, "Serving at " + address + "\n")
+
+  Server'Serve(
+    s.context,
+    address,
+    \(r Request) Response {
+      Response{
+        Status: 200,
+        Headers: {string: string},
+        Body: "",
+      }
+    },
+  )
+}

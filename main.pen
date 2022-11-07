@@ -1,7 +1,12 @@
+import Http'Request { Request }
+import Http'Response { Response }
+import Http'Server
 import Os'Environment
 import Os'File
 import Os'Process
 
+import 'logger
+import 'server
 import 'storage
 
 main = \(ctx context) none {
@@ -14,7 +19,8 @@ main = \(ctx context) none {
 }
 
 run = \(ctx context) none | error {
-  s = storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)
+  s = storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?
+  l = logger'New(ctx.Os)
 
-  none
+  server'Serve(server'New(ctx.Http, s, l), Environment'Variable(ctx.Os, "SERVER_ADDRESS")?)
 }
