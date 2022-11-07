@@ -10,7 +10,7 @@ New = \(ctx Context) Logger {
 }
 
 Info = \(l Logger, s string) none {
-  _ = File'Write(l.context, File'StdOut(), s)
+  _ = File'Write(l.context, File'StdOut(), "info: " + s)
 
   none
 }
