@@ -1,0 +1,13 @@
+import Json'Decode { Decode }
+import Json'Encode { Encode }
+import Json'Value { Value }
+
+import 'metric { Metric }
+
+Serialize = \(m Metric) string {
+  Encode()
+}
+
+Deserialize = \(s string) Metric | error {
+  Decode(s)
+}
