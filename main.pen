@@ -5,9 +5,9 @@ import Os'Environment
 import Os'File
 import Os'Process
 
+import 'database
 import 'logger
 import 'server
-import 'storage
 
 main = \(ctx context) none {
   if e = run(ctx) as none {
@@ -22,7 +22,7 @@ run = \(ctx context) none | error {
   server'Serve(
     server'New(
       ctx.Http,
-      storage'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?,
+      database'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?,
       logger'New(ctx.Os),
     ),
     Environment'Variable(ctx.Os, "SERVER_ADDRESS")?,

@@ -3,17 +3,17 @@ import Http'Request { Request }
 import Http'Response { Response }
 import Http'Server
 
+import 'database { Database }
 import 'logger { Logger }
-import 'storage { Storage }
 
 type Server {
   context Context
-  storage Storage
+  database Database
   logger Logger
 }
 
-New = \(ctx Context, s Storage, l Logger) Server {
-  Server{context: ctx, storage: s, logger: l}
+New = \(ctx Context, s Database, l Logger) Server {
+  Server{context: ctx, database: s, logger: l}
 }
 
 Serve = \(s Server, address string) none | error {
