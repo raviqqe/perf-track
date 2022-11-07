@@ -3,8 +3,8 @@ import Http'Request { Request }
 import Http'Response { Response }
 import Http'Server
 
-import 'logger { Logger }
 import 'database { Database }
+import 'logger { Logger }
 
 type Server {
   context Context

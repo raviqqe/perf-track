@@ -5,9 +5,9 @@ import Os'Environment
 import Os'File
 import Os'Process
 
+import 'database
 import 'logger
 import 'server
-import 'database
 
 main = \(ctx context) none {
   if e = run(ctx) as none {
