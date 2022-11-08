@@ -13,14 +13,14 @@ New = \(d Database) DatabaseRecordRepository {
   DatabaseRecordRepository{database: d}
 }
 
-Create = \(rp DatabaseRecordRepository, r Record) none | error {
+Create = \(r DatabaseRecordRepository, rd Record) none | error {
   database'Create(
-    rp.database,
+    r.database,
     tableName(),
     {string: Value
-      "metricId": r.MetricId,
-      "commitHash": r.CommitHash,
-      "time": r.Time,
+      "metricId": rd.MetricId,
+      "commitHash": rd.CommitHash,
+      "time": rd.Time,
     },
   )
 }
