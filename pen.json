@@ -5,6 +5,7 @@
     "Json": "pen:///json",
     "Http": "pen:///http",
     "Os": "pen:///os",
+    "Regex": "pen:///regex",
     "Sql": "pen:///sql",
     "Test": "pen:///test"
   }

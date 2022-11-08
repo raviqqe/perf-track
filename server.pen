@@ -1,7 +1,10 @@
+import Core'String
+import Core'String'Utf8
 import Http'Context { Context }
 import Http'Request { Request }
 import Http'Response { Response }
 import Http'Server
+import Regex'Expression as Regex
 
 import 'database { Database }
 import 'logger { Logger }
@@ -23,11 +26,69 @@ Serve = \(s Server, address string) none | error {
     s.context,
     address,
     \(r Request) Response {
-      Response{
-        Status: 200,
-        Headers: {string: string},
-        Body: "",
+      debug(r)
+
+      if [resource, ...ss] = Utf8'Split(Utf8'TrimStartMatches(r.Uri, "/"), "/") {
+        if resource() == "metrics" {
+          if [id, ...ss] = ss {
+            if [resource, ...ss] = ss {
+              if resource() == "records" {
+                if r.Method == "GET" {
+                  getResponse("{}")
+                } else if r.Method == "POST" {
+                  postResponse("{}")
+                } else {
+                  notFound()
+                }
+              } else {
+                notFound()
+              }
+            } else {
+              if r.Method == "GET" {
+                getResponse("{}")
+              } else {
+                notFound()
+              }
+            }
+          } else {
+            if r.Method == "GET" {
+              getResponse("{}")
+            } else if r.Method == "POST" {
+              postResponse("{}")
+            } else {
+              notFound()
+            }
+          }
+        } else {
+          notFound()
+        }
+      } else {
+        notFound()
       }
     },
   )
+}
+
+getResponse = \(s string) Response {
+  Response{
+    Status: 200,
+    Headers: {string: string "cntent-type": "text/json"},
+    Body: s,
+  }
+}
+
+postResponse = \(s string) Response {
+  Response{
+    Status: 201,
+    Headers: {string: string "cntent-type": "text/json"},
+    Body: s,
+  }
+}
+
+notFound = \() Response {
+  Response{
+    Status: 404,
+    Headers: {string: string},
+    Body: "",
+  }
 }
