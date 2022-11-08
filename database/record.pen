@@ -1,7 +1,7 @@
+import 'application'repository'record { RecordRepository }
 import 'database { Database, Value }
 import 'database'utility
 import 'record { Record }
-import 'repository'record { RecordRepository }
 
 type DatabaseRecordRepository {
   database Database
