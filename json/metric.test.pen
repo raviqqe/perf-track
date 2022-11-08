@@ -1,6 +1,6 @@
 import Test'Assert
 
-import 'application'metric { Metric }
+import 'application'metric { Metric, MetricInput }
 import 'json'metric
 
 Serialize = \() none | error {
@@ -16,6 +16,14 @@ Deserialize = \() none | error {
   Assert'Equal(metric'Deserialize(metric'Serialize(m)), m)
 }
 
+DeserializeInput = \() none | error {
+  Assert'Equal(metric'DeserializeInput("{\"name\":\"foo\"}")?, metricInput())
+}
+
 metric = \() Metric {
   Metric{Id: "foo", Name: "bar"}
+}
+
+metricInput = \() MetricInput {
+  MetricInput{Name: "foo"}
 }
