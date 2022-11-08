@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS metric (
-    id serial PRIMARY,
+    id serial PRIMARY KEY,
     name text UNIQUE
 );
 
