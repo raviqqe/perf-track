@@ -1,4 +1,6 @@
+import Core'Number
 import Core'String
+import Core'String'Byte
 import Core'String'Utf8
 import Http'Context { Context }
 import Http'Request { Request }
@@ -25,17 +27,15 @@ Serve = \(s Server, address string) none | error {
   Server'Serve(
     s.context,
     address,
-    \(r Request) Response {
-      debug(r)
-
-      if [resource, ...ss] = Utf8'Split(Utf8'TrimStartMatches(r.Uri, "/"), "/") {
+    \(req Request) Response {
+      res = if [resource, ...ss] = Utf8'Split(Utf8'TrimStartMatches(req.Uri, "/"), "/") {
         if resource() == "metrics" {
           if [id, ...ss] = ss {
             if [resource, ...ss] = ss {
               if resource() == "records" {
-                if r.Method == "GET" {
+                if req.Method == "GET" {
                   getResponse("{}")
-                } else if r.Method == "POST" {
+                } else if req.Method == "POST" {
                   postResponse("{}")
                 } else {
                   notFound()
@@ -44,16 +44,16 @@ Serve = \(s Server, address string) none | error {
                 notFound()
               }
             } else {
-              if r.Method == "GET" {
+              if req.Method == "GET" {
                 getResponse("{}")
               } else {
                 notFound()
               }
             }
           } else {
-            if r.Method == "GET" {
+            if req.Method == "GET" {
               getResponse("{}")
-            } else if r.Method == "POST" {
+            } else if req.Method == "POST" {
               postResponse("{}")
             } else {
               notFound()
@@ -65,6 +65,19 @@ Serve = \(s Server, address string) none | error {
       } else {
         notFound()
       }
+
+      logger'Info(
+        s.logger,
+        req.Method
+          + " "
+          + req.Uri
+          + " - "
+          + Number'String(res.Status)
+          + " "
+          + Number'String(Byte'Size(res.Body)),
+      )
+
+      res
     },
   )
 }
