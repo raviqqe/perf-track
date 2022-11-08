@@ -72,7 +72,7 @@ Serve = \(s Server, address string) none | error {
 getResponse = \(s string) Response {
   Response{
     Status: 200,
-    Headers: {string: string "cntent-type": "text/json"},
+    Headers: contentHeaders(),
     Body: s,
   }
 }
@@ -80,9 +80,13 @@ getResponse = \(s string) Response {
 postResponse = \(s string) Response {
   Response{
     Status: 201,
-    Headers: {string: string "cntent-type": "text/json"},
+    Headers: contentHeaders(),
     Body: s,
   }
+}
+
+contentHeaders = \() {string: string} {
+  {string: string "content-type": "text/json"}
 }
 
 notFound = \() Response {
