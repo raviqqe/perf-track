@@ -74,7 +74,7 @@ Serve = \(s Server, address string) none | error {
           + " - "
           + Number'String(res.Status)
           + " "
-          + Number'String(Byte'Size(res.Body)),
+          + Number'String(Byte'Length(res.Body)),
       )
 
       res
