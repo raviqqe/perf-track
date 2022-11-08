@@ -2,8 +2,8 @@ import Json'Decode { Decode }
 import Json'Encode { Encode }
 import Json'Value { Value }
 
+import 'application'metric { Metric }
 import 'json'utility
-import 'metric { Metric }
 
 Serialize = \(m Metric) string {
   Encode(

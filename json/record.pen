@@ -2,8 +2,8 @@ import Json'Decode { Decode }
 import Json'Encode { Encode }
 import Json'Value { Value }
 
+import 'application'record { Record }
 import 'json'utility
-import 'record { Record }
 
 Serialize = \(r Record) string {
   Encode(
