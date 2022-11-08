@@ -1,4 +1,4 @@
-import 'metric { Metric }
+import 'application'metric { Metric }
 
 type MetricRepository {
   Create \(Metric) none | error

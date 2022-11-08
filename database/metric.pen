@@ -1,7 +1,7 @@
+import 'application'metric { Metric, MetricInput }
 import 'application'repository'metric { MetricRepository }
 import 'database { Database, Value }
 import 'database'utility
-import 'metric { Metric, MetricInput }
 
 type DatabaseMetricRepository {
   database Database

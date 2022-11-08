@@ -1,7 +1,7 @@
 import Test'Assert
 
+import 'application'metric { Metric }
 import 'json'metric
-import 'metric { Metric }
 
 Serialize = \() none | error {
   Assert'Equal(

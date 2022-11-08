@@ -1,7 +1,7 @@
 import Test'Assert
 
+import 'application'record { Record }
 import 'json'record
-import 'record { Record }
 
 Serialize = \() none | error {
   Assert'Equal(record'Serialize(record()), "{\"time\":42,\"metricId\":\"foo\",\"commitHash\":\"deadbeef\"}")

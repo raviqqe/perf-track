@@ -1,4 +1,4 @@
-import 'record { Record }
+import 'application'record { Record }
 
 type RecordRepository {
   Create \(Record) none | error
