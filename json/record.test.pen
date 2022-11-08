@@ -1,0 +1,18 @@
+import Test'Assert
+
+import 'application'record { Record }
+import 'json'record
+
+Serialize = \() none | error {
+  Assert'Equal(record'Serialize(record()), "{\"time\":42,\"metricId\":\"foo\",\"commitHash\":\"deadbeef\"}")
+}
+
+Deserialize = \() none | error {
+  r = record()
+
+  Assert'Equal(record'Deserialize(record'Serialize(r)), r)
+}
+
+record = \() Record {
+  Record{MetricId: "foo", CommitHash: "deadbeef", Time: 42}
+}

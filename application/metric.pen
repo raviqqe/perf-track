@@ -1,0 +1,8 @@
+type Metric {
+  Id string
+  Name string
+}
+
+type MetricInput {
+  Name string
+}

@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS metric (
-    id serial
+    id serial PRIMARY KEY,
+    name text NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS record (
-    id serial,
-    commit_hash text,
-    time integer
+    metric_id serial NOT NULL REFERENCES metric (id) ON DELETE CASCADE,
+    commit_hash text NOT NULL,
+    time integer NOT NULL,
+    PRIMARY KEY (metric_id, commit_hash)
 );

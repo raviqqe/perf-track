@@ -1,0 +1,34 @@
+import Json'Decode { Decode }
+import Json'Encode { Encode }
+import Json'Value { Value }
+
+import 'application'metric { Metric, MetricInput }
+import 'json'utility
+
+Serialize = \(m Metric) string {
+  Encode(
+    Value'New(
+      {string: Value
+        "id": Value'New(m.Id),
+        "name": Value'New(m.Name),
+      },
+    ),
+  )
+}
+
+Deserialize = \(s string) Metric | error {
+  o = utility'Object(Decode(s)?)?
+
+  Metric{
+    Id: utility'String(utility'Field(o, "id")?)?,
+    Name: utility'String(utility'Field(o, "name")?)?,
+  }
+}
+
+DeserializeInput = \(s string) MetricInput | error {
+  o = utility'Object(Decode(s)?)?
+
+  MetricInput{
+    Name: utility'String(utility'Field(o, "name")?)?,
+  }
+}

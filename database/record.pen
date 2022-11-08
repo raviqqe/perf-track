@@ -1,0 +1,40 @@
+import 'application'record { Record }
+import 'application'repository'record { RecordRepository }
+import 'database { Database, Value }
+import 'database'utility
+
+type DatabaseRecordRepository {
+  database Database
+}
+
+tableName = \() string { "record" }
+
+New = \(d Database) DatabaseRecordRepository {
+  DatabaseRecordRepository{database: d}
+}
+
+Create = \(r DatabaseRecordRepository, rd Record) none | error {
+  database'Create(
+    r.database,
+    tableName(),
+    {string: Value
+      "metric_id": rd.MetricId,
+      "commit_hash": rd.CommitHash,
+      "time": rd.Time,
+    },
+  )
+}
+
+Find = \(r DatabaseRecordRepository, id string, h string) Record | error {
+  x = database'Find(
+    r.database,
+    tableName(),
+    {string: Value "metric_id": id, "commit_hash": h},
+  )?
+
+  Record{
+    MetricId: id,
+    CommitHash: h,
+    Time: utility'Number(utility'Column(x, "time")?)?,
+  }
+}

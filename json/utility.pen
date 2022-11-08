@@ -1,0 +1,33 @@
+import Json'Value { Value }
+
+Field = \(o {string: Value}, s string) Value | error {
+  if v = o[s] {
+    v
+  } else {
+    error(s + " not found")
+  }
+}
+
+Number = \(v Value) number | error {
+  if n = Value'Raw(v) as number {
+    n
+  } else {
+    error("number expected")
+  }
+}
+
+Object = \(v Value) {string: Value} | error {
+  if o = Value'Raw(v) as {string: Value} {
+    o
+  } else {
+    error("object expected")
+  }
+}
+
+String = \(v Value) string | error {
+  if s = Value'Raw(v) as string {
+    s
+  } else {
+    error("string expected")
+  }
+}

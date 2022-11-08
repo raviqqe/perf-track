@@ -1,0 +1,6 @@
+import 'application'metric { Metric }
+
+type MetricRepository {
+  Create \(Metric) none | error
+  Find \(string) Metric | error
+}

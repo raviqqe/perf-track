@@ -1,0 +1,28 @@
+import Json'Decode { Decode }
+import Json'Encode { Encode }
+import Json'Value { Value }
+
+import 'application'record { Record }
+import 'json'utility
+
+Serialize = \(r Record) string {
+  Encode(
+    Value'New(
+      {string: Value
+        "metricId": Value'New(r.MetricId),
+        "commitHash": Value'New(r.CommitHash),
+        "time": Value'New(r.Time),
+      },
+    ),
+  )
+}
+
+Deserialize = \(s string) Record | error {
+  o = utility'Object(Decode(s)?)?
+
+  Record{
+    MetricId: utility'String(utility'Field(o, "metricId")?)?,
+    CommitHash: utility'String(utility'Field(o, "commitHash")?)?,
+    Time: utility'Number(utility'Field(o, "time")?)?,
+  }
+}
