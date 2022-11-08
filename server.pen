@@ -34,8 +34,10 @@ Serve = \(s Server, address string) none | error {
             if [resource, ...ss] = ss {
               if resource() == "records" {
                 if req.Method == "GET" {
+                  # TODO
                   getResponse("{}")
                 } else if req.Method == "POST" {
+                  # TODO
                   postResponse("{}")
                 } else {
                   notFound()
@@ -45,6 +47,7 @@ Serve = \(s Server, address string) none | error {
               }
             } else {
               if req.Method == "GET" {
+                # TODO
                 getResponse("{}")
               } else {
                 notFound()
@@ -52,8 +55,10 @@ Serve = \(s Server, address string) none | error {
             }
           } else {
             if req.Method == "GET" {
+              # TODO
               getResponse("{}")
             } else if req.Method == "POST" {
+              # TODO
               postResponse("{}")
             } else {
               notFound()
@@ -65,7 +70,6 @@ Serve = \(s Server, address string) none | error {
       } else {
         notFound()
       }
-
       logger'Info(
         s.logger,
         req.Method
