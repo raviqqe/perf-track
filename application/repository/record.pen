@@ -1,0 +1,6 @@
+import 'record { Record }
+
+type RecordRepository {
+  Create \(Record) none | error
+  FindMany \(string) [Record] | error
+}
