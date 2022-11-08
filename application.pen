@@ -1,0 +1,7 @@
+import 'application'repository'metric { MetricRepository }
+import 'application'repository'record { RecordRepository }
+
+type Application {
+  MetricRepository MetricRepository
+  RecordRepository RecordRepository
+}
