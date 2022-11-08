@@ -18,8 +18,8 @@ Create = \(r DatabaseRecordRepository, rd Record) none | error {
     r.database,
     tableName(),
     {string: Value
-      "metricId": rd.MetricId,
-      "commitHash": rd.CommitHash,
+      "metric_id": rd.MetricId,
+      "commit_hash": rd.CommitHash,
       "time": rd.Time,
     },
   )
@@ -29,7 +29,7 @@ Find = \(r DatabaseRecordRepository, id string, h string) Record | error {
   x = database'Find(
     r.database,
     tableName(),
-    {string: Value "metricId": id, "commitHash": h},
+    {string: Value "metric_id": id, "commit_hash": h},
   )?
 
   Record{
