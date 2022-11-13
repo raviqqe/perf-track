@@ -38,11 +38,9 @@ Serve = \(s Server, address string) none | error {
             if [resource, ...ss] = ss {
               if resource() == "records" {
                 if req.Method == "GET" {
-                  # TODO
-                  getResponse("{}")
+                  findRecords(s.application, id)
                 } else if req.Method == "POST" {
-                  # TODO
-                  postResponse()
+                  createRecord(s.application, req)
                 } else {
                   notFound()
                 }
