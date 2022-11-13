@@ -1,3 +1,4 @@
+import Core'Number
 import Core'String
 import Sql'Context { Context }
 import Sql'Pool { Pool }
@@ -43,15 +44,6 @@ FindMany = \(s Database, table string, fields [string], where {string: Value}) [
   [{string: Value} buildValue(fields, x()) for x in xs]
 }
 
-selectQuery = \(table string, ks [string]) string {
-  "select * from " + table
-    + if size(ks) > 0 {
-      " where " + String'Join([string k() + " = ?" for k in ks], " and ")
-    } else {
-      ""
-    }
-}
-
 Create = \(s Database, table string, x {string: Value}) none | error {
   Pool'Execute(
     s.context,
@@ -63,13 +55,38 @@ Create = \(s Database, table string, x {string: Value}) none | error {
   none
 }
 
+selectQuery = \(table string, ks [string]) string {
+  "select * from " + table
+    + if size(ks) > 0 {
+      " where " + String'Join(placeholderMatches(ks, 1), " and ")
+    } else {
+      ""
+    }
+}
+
 insertQuery = \(table string, ks [string]) string {
   "insert into " + table
     + " ("
     + String'Join(ks, ",")
     + ") values ("
-    + String'Join([string "?" for _ in ks], ",")
+    + String'Join(placeholders(ks, 1), ",")
     + ")"
+}
+
+placeholders = \(ks [string], i number) [string] {
+  if [_, ...ks] = ks {
+    [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
+  } else {
+    [string]
+  }
+}
+
+placeholderMatches = \(ks [string], i number) [string] {
+  if [k, ...ks] = ks {
+    [string k() + " = $" + Number'String(i), ...placeholders(ks, i + 1)]
+  } else {
+    [string]
+  }
 }
 
 buildValue = \(ks [string], vs [Value]) {string: Value} {
