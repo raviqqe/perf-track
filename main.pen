@@ -6,6 +6,8 @@ import Os'File
 import Os'Process
 
 import 'database
+import 'database'metric
+import 'database'record
 import 'logger
 import 'server
 
@@ -19,6 +21,11 @@ main = \(ctx context) none {
 }
 
 run = \(ctx context) none | error {
+  a = Application{
+    MetricRepository: metric'New(),
+    RecordRepository: record'New(),
+  }
+
   server'Serve(
     server'New(
       ctx.Http,
