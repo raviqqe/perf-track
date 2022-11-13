@@ -38,14 +38,19 @@ Find = \(s Database, table string, where {string: Value}) {string: Value} | erro
 
 FindMany = \(s Database, table string, where {string: Value}) [{string: Value}] | error {
   ks = [string k for k, _ in where]
+  debug(findQuery(table, ks))
   xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in where])?
 
   [{string: Value} buildValue(ks, x()) for x in xs]
 }
 
 findQuery = \(table string, ks [string]) string {
-  "select * from " + table + " where "
-    + String'Join([string k() + " = ?" for k in ks], " and ")
+  "select * from " + table
+    + if size(ks) > 0 {
+      " where " + String'Join([string k() + " = ?" for k in ks], " and ")
+    } else {
+      ""
+    }
 }
 
 Create = \(s Database, table string, x {string: Value}) none | error {
