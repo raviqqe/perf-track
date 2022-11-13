@@ -5,6 +5,7 @@ import Os'Environment
 import Os'File
 import Os'Process
 
+import 'application { Application }
 import 'database
 import 'database'metric
 import 'database'record
@@ -21,17 +22,14 @@ main = \(ctx context) none {
 }
 
 run = \(ctx context) none | error {
+  d = database'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?
   a = Application{
-    MetricRepository: metric'New(),
-    RecordRepository: record'New(),
+    MetricRepository: metric'New(d),
+    RecordRepository: record'New(d),
   }
 
   server'Serve(
-    server'New(
-      ctx.Http,
-      database'New(ctx.Sql, Environment'Variable(ctx.Os, "DATABASE_URI")?)?,
-      logger'New(ctx.Os),
-    ),
+    server'New(ctx.Http, a, logger'New(ctx.Os)),
     Environment'Variable(ctx.Os, "SERVER_ADDRESS")?,
   )
 }

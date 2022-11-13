@@ -8,17 +8,17 @@ import Http'Response { Response }
 import Http'Server
 import Regex'Expression as Regex
 
-import 'database { Database }
+import 'application { Application }
 import 'logger { Logger }
 
 type Server {
   context Context
-  database Database
+  application Application
   logger Logger
 }
 
-New = \(ctx Context, s Database, l Logger) Server {
-  Server{context: ctx, database: s, logger: l}
+New = \(ctx Context, a Application, l Logger) Server {
+  Server{context: ctx, application: a, logger: l}
 }
 
 Serve = \(s Server, address string) none | error {
