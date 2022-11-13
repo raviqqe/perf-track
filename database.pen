@@ -25,9 +25,9 @@ New = \(ctx Context, uri string) Database | error {
   }
 }
 
-Find = \(s Database, table string, k {string: Value}) {string: Value} | error {
-  ks = [string k for k, _ in k]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks) + " limit 1", [Value v for _, v in k])?
+Find = \(s Database, table string, where {string: Value}) {string: Value} | error {
+  ks = [string k for k, _ in where]
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks) + " limit 1", [Value v for _, v in where])?
 
   if [x, ..._] = xs {
     buildValue(ks, x())
@@ -36,9 +36,9 @@ Find = \(s Database, table string, k {string: Value}) {string: Value} | error {
   }
 }
 
-FindMany = \(s Database, table string, k {string: Value}) [{string: Value}] | error {
-  ks = [string k for k, _ in k]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in k])?
+FindMany = \(s Database, table string, where {string: Value}) [{string: Value}] | error {
+  ks = [string k for k, _ in where]
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in where])?
 
   [{string: Value} buildValue(ks, x()) for x in xs]
 }
