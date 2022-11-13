@@ -65,7 +65,7 @@ Create = \(s Database, table string, x {string: Value}) none | error {
 
 insertQuery = \(table string, ks [string]) string {
   "insert into " + table
-    + "("
+    + " ("
     + String'Join(ks, ",")
     + ") values ("
     + String'Join([string "?" for _ in ks], ",")
