@@ -19,9 +19,7 @@ Serialize = \(r Record) string {
 }
 
 SerializeMany = \(rs [Record]) string {
-  "["
-    + String'Join([string Serialize(r()) for r in rs], ",")
-    + "]"
+  "[" + String'Join([string Serialize(r()) for r in rs], ",") + "]"
 }
 
 Deserialize = \(s string) Record | error {

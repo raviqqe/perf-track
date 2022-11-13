@@ -18,9 +18,7 @@ Serialize = \(m Metric) string {
 }
 
 SerializeMany = \(ms [Metric]) string {
-  "["
-    + String'Join([string Serialize(m()) for m in ms], ",")
-    + "]"
+  "[" + String'Join([string Serialize(m()) for m in ms], ",") + "]"
 }
 
 Deserialize = \(s string) Metric | error {
