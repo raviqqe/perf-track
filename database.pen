@@ -25,19 +25,22 @@ New = \(ctx Context, uri string) Database | error {
   }
 }
 
-Find = \(s Database, table string, k {string: Value}) {string: Value} | error {
-  ks = [string k for k, _ in k]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in k])?
+Find = \(s Database, table string, where {string: Value}) {string: Value} | error {
+  ks = [string k for k, _ in where]
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks) + " limit 1", [Value v for _, v in where])?
 
-  if [x, ...xs] = xs {
-    if [_, ..._] = xs {
-      error(table + " not found")
-    } else {
-      buildValue(ks, x())
-    }
+  if [x, ..._] = xs {
+    buildValue(ks, x())
   } else {
     error(table + " not found")
   }
+}
+
+FindMany = \(s Database, table string, where {string: Value}) [{string: Value}] | error {
+  ks = [string k for k, _ in where]
+  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in where])?
+
+  [{string: Value} buildValue(ks, x()) for x in xs]
 }
 
 findQuery = \(table string, ks [string]) string {
@@ -65,12 +68,12 @@ saveQuery = \(table string, ks [string]) string {
     + ")"
 }
 
-buildValue = \(ks [string], vs [Value]) {string: Value} | error {
+buildValue = \(ks [string], vs [Value]) {string: Value} {
   if [k, ...ks] = ks {
     if [v, ...vs] = vs {
-      {string: Value ...buildValue(ks, vs)?, k(): v()}
+      {string: Value ...buildValue(ks, vs), k(): v()}
     } else {
-      error("unmatched key and value counts")
+      {string: Value}
     }
   } else {
     {string: Value}

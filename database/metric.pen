@@ -3,25 +3,20 @@ import 'application'repository'metric { MetricRepository }
 import 'database { Database, Value }
 import 'database'utility
 
-type DatabaseMetricRepository {
-  database Database
-}
-
 tableName = \() string { "metric" }
 
-New = \(d Database) DatabaseMetricRepository {
-  DatabaseMetricRepository{database: d}
-}
+New = \(d Database) MetricRepository {
+  MetricRepository{
+    Create: \(m MetricInput) none | error {
+      database'Create(d, tableName(), {string: Value "name": m.Name})
+    },
+    Find: \(id string) Metric | error {
+      x = database'Find(d, tableName(), {string: Value "id": id})?
 
-Create = \(r DatabaseMetricRepository, m MetricInput) none | error {
-  database'Create(r.database, tableName(), {string: Value "name": m.Name})
-}
-
-Find = \(r DatabaseMetricRepository, id string) Metric | error {
-  x = database'Find(r.database, tableName(), {string: Value "id": id})?
-
-  Metric{
-    Id: utility'String(utility'Column(x, "id")?)?,
-    Name: utility'String(utility'Column(x, "name")?)?,
+      Metric{
+        Id: utility'String(utility'Column(x, "id")?)?,
+        Name: utility'String(utility'Column(x, "name")?)?,
+      }
+    },
   }
 }
