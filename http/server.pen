@@ -56,8 +56,7 @@ Serve = \(s Server, address string) none | error {
             }
           } else {
             if req.Method == "GET" {
-              # TODO
-              getResponse("{}")
+              findMetrics(s.application)
             } else if req.Method == "POST" {
               createMetric(s.application, req)
             } else {
