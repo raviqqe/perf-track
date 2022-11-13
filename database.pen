@@ -44,7 +44,7 @@ FindMany = \(s Database, table string, where {string: Value}) [{string: Value}] 
 }
 
 findQuery = \(table string, ks [string]) string {
-  "select * from " + table + " where"
+  "select * from " + table + " where "
     + String'Join([string k() + " = ?" for k in ks], " and ")
 }
 
