@@ -27,7 +27,7 @@ New = \(ctx Context, uri string) Database | error {
 
 Find = \(s Database, table string, fields [string], where {string: Value}) {string: Value} | error {
   ks = [string k for k, _ in where]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks) + " limit 1", [Value v for _, v in where])?
+  xs = Pool'Query(s.context, s.pool, selectQuery(table, ks) + " limit 1", [Value v for _, v in where])?
 
   if [x, ..._] = xs {
     buildValue(fields, x())
@@ -38,12 +38,12 @@ Find = \(s Database, table string, fields [string], where {string: Value}) {stri
 
 FindMany = \(s Database, table string, fields [string], where {string: Value}) [{string: Value}] | error {
   ks = [string k for k, _ in where]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in where])?
+  xs = Pool'Query(s.context, s.pool, selectQuery(table, ks), [Value v for _, v in where])?
 
   [{string: Value} buildValue(fields, x()) for x in xs]
 }
 
-findQuery = \(table string, ks [string]) string {
+selectQuery = \(table string, ks [string]) string {
   "select * from " + table
     + if size(ks) > 0 {
       " where " + String'Join([string k() + " = ?" for k in ks], " and ")
@@ -56,14 +56,14 @@ Create = \(s Database, table string, x {string: Value}) none | error {
   Pool'Execute(
     s.context,
     s.pool,
-    saveQuery(table, [string k for k, _ in x]),
+    insertQuery(table, [string k for k, _ in x]),
     [Value v for _, v in x],
   )?
 
   none
 }
 
-saveQuery = \(table string, ks [string]) string {
+insertQuery = \(table string, ks [string]) string {
   "insert into " + table
     + "("
     + String'Join(ks, ",")
