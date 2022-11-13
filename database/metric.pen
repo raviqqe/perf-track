@@ -30,14 +30,18 @@ New = \(d Database) MetricRepository {
 
 buildMetrics = \(xs [{string: Value}]) [Metric] | error {
   if [x, ...xs] = xs {
-    m = Metric{
-      Id: utility'String(utility'Column(x(), "id")?)?,
-      Name: utility'String(utility'Column(x(), "name")?)?,
-    }
+    m = buildMetric(x())?
     ms = buildMetrics(xs)?
 
     [Metric m, ...ms]
   } else {
     [Metric]
+  }
+}
+
+buildMetric = \(x {string: Value}) Metric | error {
+  Metric{
+    Id: utility'String(utility'Column(x, "id")?)?,
+    Name: utility'String(utility'Column(x, "name")?)?,
   }
 }

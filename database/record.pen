@@ -35,15 +35,19 @@ New = \(d Database) RecordRepository {
 
 buildRecords = \(xs [{string: Value}]) [Record] | error {
   if [x, ...xs] = xs {
-    r = Record{
-      MetricId: utility'String(utility'Column(x(), "metric_id")?)?,
-      CommitHash: utility'String(utility'Column(x(), "commit_hash")?)?,
-      Time: utility'Number(utility'Column(x(), "time")?)?,
-    }
+    r = buildRecord(x())?
     rs = buildRecords(xs)?
 
     [Record r, ...rs]
   } else {
     [Record]
+  }
+}
+
+buildRecord = \(x {string: Value}) Record | error {
+  Record{
+    MetricId: utility'String(utility'Column(x, "metric_id")?)?,
+    CommitHash: utility'String(utility'Column(x, "commit_hash")?)?,
+    Time: utility'Number(utility'Column(x, "time")?)?,
   }
 }
