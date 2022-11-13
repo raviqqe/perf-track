@@ -12,12 +12,16 @@ FindMetric = \(a Application, id string) Metric | error {
   a.MetricRepository.Find(id)
 }
 
-FindRecords = \(a Application, metricId string) [Record] | error {
-  a.RecordRepository.FindMany(metricId)
+FindMetrics = \(a Application) [Metric] | error {
+  a.MetricRepository.FindMany()
 }
 
 CreateMetric = \(a Application, i MetricInput) none | error {
   a.MetricRepository.Create(i)
+}
+
+FindRecords = \(a Application, metricId string) [Record] | error {
+  a.RecordRepository.FindMany(metricId)
 }
 
 CreateRecord = \(a Application, r Record) none | error {

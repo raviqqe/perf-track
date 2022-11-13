@@ -20,21 +20,7 @@ Serialize = \(r Record) string {
 
 SerializeMany = \(rs [Record]) string {
   "["
-    + String'Join(
-      [string
-        Encode(
-          Value'New(
-            {string: Value
-              "metricId": Value'New(r().MetricId),
-              "commitHash": Value'New(r().CommitHash),
-              "time": Value'New(r().Time),
-            },
-          ),
-        )
-        for r in rs
-      ],
-      ",",
-    )
+    + String'Join([string Serialize(r()) for r in rs], ",")
     + "]"
 }
 

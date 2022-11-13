@@ -93,6 +93,14 @@ findMetric = \(a Application, id string) Response {
   }
 }
 
+findMetrics = \(a Application) Response {
+  if x = application'FindMetrics(a) as [Metric] {
+    getResponse(metric'SerializeMany(x))
+  } else {
+    errorResponse(x)
+  }
+}
+
 createMetric = \(a Application, r Request) Response {
   if x = \() none | error {
     application'CreateMetric(a, metric'DeserializeInput(r.Body)?)
