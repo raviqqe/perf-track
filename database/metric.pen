@@ -18,6 +18,11 @@ New = \(d Database) MetricRepository {
         Name: utility'String(utility'Column(x, "name")?)?,
       }
     },
+    FindMany: \() [Metric] | error {
+      buildRecords(
+        database'FindMany(d, tableName(), {string: Value})?,
+      )
+    },
   }
 }
 
