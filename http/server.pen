@@ -9,6 +9,10 @@ import Http'Server
 import Regex'Expression as Regex
 
 import 'application { Application }
+import 'application'metric { Metric }
+import 'application'record { Record }
+import 'json'metric
+import 'json'record
 import 'logger { Logger }
 
 type Server {
@@ -38,7 +42,7 @@ Serve = \(s Server, address string) none | error {
                   getResponse("{}")
                 } else if req.Method == "POST" {
                   # TODO
-                  postResponse("{}")
+                  postResponse()
                 } else {
                   notFound()
                 }
@@ -47,8 +51,7 @@ Serve = \(s Server, address string) none | error {
               }
             } else {
               if req.Method == "GET" {
-                # TODO
-                getResponse("{}")
+                findMetric(s.application, id())
               } else {
                 notFound()
               }
@@ -58,8 +61,7 @@ Serve = \(s Server, address string) none | error {
               # TODO
               getResponse("{}")
             } else if req.Method == "POST" {
-              # TODO
-              postResponse("{}")
+              createMetric(s.application, req)
             } else {
               notFound()
             }
@@ -86,6 +88,42 @@ Serve = \(s Server, address string) none | error {
   )
 }
 
+findMetric = \(a Application, id string) Response {
+  if x = application'FindMetric(a, id) as Metric {
+    getResponse(metric'Serialize(x))
+  } else {
+    errorResponse(x)
+  }
+}
+
+createMetric = \(a Application, r Request) Response {
+  if x = \() none | error {
+    application'CreateMetric(a, metric'DeserializeInput(r.Body)?)
+  }() as none {
+    postResponse()
+  } else {
+    errorResponse(x)
+  }
+}
+
+findRecords = \(a Application, metricId string) Response {
+  if x = application'FindRecords(a, metricId) as [Record] {
+    getResponse(record'SerializeMany(x))
+  } else {
+    errorResponse(x)
+  }
+}
+
+createRecord = \(a Application, r Request) Response {
+  if x = \() none | error {
+    application'CreateRecord(a, record'Deserialize(r.Body)?)
+  }() as none {
+    postResponse()
+  } else {
+    errorResponse(x)
+  }
+}
+
 getResponse = \(s string) Response {
   Response{
     Status: 200,
@@ -94,11 +132,28 @@ getResponse = \(s string) Response {
   }
 }
 
-postResponse = \(s string) Response {
+postResponse = \() Response {
   Response{
     Status: 201,
-    Headers: contentHeaders(),
-    Body: s,
+    Headers: {string: string},
+    Body: "",
+  }
+}
+
+# TODO Handle 500 errors properly.
+errorResponse = \(e error) Response {
+  if e = source(e) as string {
+    Response{
+      Status: 400,
+      Headers: {string: string},
+      Body: e,
+    }
+  } else {
+    Response{
+      Status: 500,
+      Headers: {string: string},
+      Body: "",
+    }
   }
 }
 
