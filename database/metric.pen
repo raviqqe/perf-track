@@ -19,7 +19,7 @@ New = \(d Database) MetricRepository {
       }
     },
     FindMany: \() [Metric] | error {
-      buildRecords(
+      buildMetrics(
         database'FindMany(d, tableName(), {string: Value})?,
       )
     },
@@ -29,8 +29,8 @@ New = \(d Database) MetricRepository {
 buildMetrics = \(xs [{string: Value}]) [Metric] | error {
   if [x, ...xs] = xs {
     m = Metric{
-      MetricId: utility'String(utility'Column(x(), "id")?)?,
-      CommitHash: utility'String(utility'Column(x(), "name")?)?,
+      Id: utility'String(utility'Column(x(), "id")?)?,
+      Name: utility'String(utility'Column(x(), "name")?)?,
     }
     ms = buildMetrics(xs)?
 
