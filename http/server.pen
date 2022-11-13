@@ -38,7 +38,7 @@ Serve = \(s Server, address string) none | error {
             if [resource, ...ss] = ss {
               if resource() == "records" {
                 if req.Method == "GET" {
-                  findRecords(s.application, id)
+                  findRecords(s.application, id())
                 } else if req.Method == "POST" {
                   createRecord(s.application, req)
                 } else {
