@@ -1,7 +1,25 @@
+import 'application'metric { Metric, MetricInput }
+import 'application'record { Record }
 import 'application'repository'metric { MetricRepository }
 import 'application'repository'record { RecordRepository }
 
 type Application {
   MetricRepository MetricRepository
   RecordRepository RecordRepository
+}
+
+FindMetric = \(a Application, id string) Metric | error {
+  a.MetricRepository.Find(id)
+}
+
+FindRecords = \(a Application, metricId string) [Record] | error {
+  a.RecordRepository.FindMany(metricId)
+}
+
+CreateMetric = \(a Application, i MetricInput) none | error {
+  a.MetricRepository.Create(i)
+}
+
+CreateRecord = \(a Application, r Record) none | error {
+  a.RecordRepository.Create(r)
 }
