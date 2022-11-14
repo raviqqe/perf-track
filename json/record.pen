@@ -31,3 +31,13 @@ Deserialize = \(s string) Record | error {
     Time: utility'Number(utility'Field(o, "time")?)?,
   }
 }
+
+DeserializeInput = \(s string, metricId string) Record | error {
+  o = utility'Object(Decode(s)?)?
+
+  Record{
+    MetricId: metricId,
+    CommitHash: utility'String(utility'Field(o, "commitHash")?)?,
+    Time: utility'Number(utility'Field(o, "time")?)?,
+  }
+}
