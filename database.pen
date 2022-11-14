@@ -37,11 +37,8 @@ Find = \(s Database, table string, fields [string], where {string: Value}) {stri
   }
 }
 
-FindMany = \(s Database, table string, fields [string], where {string: Value}) [{string: Value}] | error {
-  ks = [string k for k, _ in where]
-  xs = Pool'Query(s.context, s.pool, selectQuery(table, ks), [Value v for _, v in where])?
-
-  [{string: Value} buildValue(fields, x()) for x in xs]
+FindMany = \(d Database, table string, fields [string], where {string: Value}) [{string: Value}] | error {
+  Query(d, selectQuery(table, [string k for k, _ in where]), fields, [Value v for _, v in where])?
 }
 
 Create = \(s Database, table string, x {string: Value}) none | error {
@@ -53,6 +50,12 @@ Create = \(s Database, table string, x {string: Value}) none | error {
   )?
 
   none
+}
+
+Query = \(s Database, query string, fields [string], values [Value]) [{string: Value}] | error {
+  xs = Pool'Query(s.context, s.pool, query, values)?
+
+  [{string: Value} buildValue(fields, x()) for x in xs]
 }
 
 selectQuery = \(table string, ks [string]) string {
