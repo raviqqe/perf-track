@@ -5,18 +5,43 @@ import 'database'utility
 
 tableName = \() string { "metric" }
 
+fieldNames = \() [string] { [string "id", "name"] }
+
 New = \(d Database) MetricRepository {
   MetricRepository{
     Create: \(m MetricInput) none | error {
       database'Create(d, tableName(), {string: Value "name": m.Name})
     },
     Find: \(id string) Metric | error {
-      x = database'Find(d, tableName(), {string: Value "id": id})?
+      x = database'Find(d, tableName(), fieldNames(), {string: Value "id": id})?
 
       Metric{
         Id: utility'String(utility'Column(x, "id")?)?,
         Name: utility'String(utility'Column(x, "name")?)?,
       }
     },
+    FindMany: \() [Metric] | error {
+      buildMetrics(
+        database'FindMany(d, tableName(), fieldNames(), {string: Value})?,
+      )
+    },
+  }
+}
+
+buildMetrics = \(xs [{string: Value}]) [Metric] | error {
+  if [x, ...xs] = xs {
+    m = buildMetric(x())?
+    ms = buildMetrics(xs)?
+
+    [Metric m, ...ms]
+  } else {
+    [Metric]
+  }
+}
+
+buildMetric = \(x {string: Value}) Metric | error {
+  Metric{
+    Id: utility'String(utility'Column(x, "id")?)?,
+    Name: utility'String(utility'Column(x, "name")?)?,
   }
 }

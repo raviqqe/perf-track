@@ -4,7 +4,7 @@ Performance tracking as a service written in [the Pen programming language](http
 
 ## Usage
 
-To run it on a SQLite 3 database, run the following commands:
+To run it on PostgreSQL, run the following commands:
 
 ```sh
 tools/serve.sh
