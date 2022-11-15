@@ -69,6 +69,7 @@ Serve = \(s Server, address string) none | error {
       } else {
         notFound()
       }
+
       logger'Info(
         s.logger,
         req.Method
