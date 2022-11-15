@@ -40,7 +40,7 @@ Serve = \(s Server, address string) none | error {
                 if req.Method == "GET" {
                   findRecords(s.application, id())
                 } else if req.Method == "POST" {
-                  createRecord(s.application, req)
+                  createRecord(s.application, req, id())
                 } else {
                   notFound()
                 }
@@ -56,8 +56,7 @@ Serve = \(s Server, address string) none | error {
             }
           } else {
             if req.Method == "GET" {
-              # TODO
-              getResponse("{}")
+              findMetrics(s.application)
             } else if req.Method == "POST" {
               createMetric(s.application, req)
             } else {
@@ -94,6 +93,14 @@ findMetric = \(a Application, id string) Response {
   }
 }
 
+findMetrics = \(a Application) Response {
+  if x = application'FindMetrics(a) as [Metric] {
+    getResponse(metric'SerializeMany(x))
+  } else {
+    errorResponse(x)
+  }
+}
+
 createMetric = \(a Application, r Request) Response {
   if x = \() none | error {
     application'CreateMetric(a, metric'DeserializeInput(r.Body)?)
@@ -112,9 +119,9 @@ findRecords = \(a Application, metricId string) Response {
   }
 }
 
-createRecord = \(a Application, r Request) Response {
+createRecord = \(a Application, r Request, metricId string) Response {
   if x = \() none | error {
-    application'CreateRecord(a, record'Deserialize(r.Body)?)
+    application'CreateRecord(a, record'DeserializeInput(r.Body, metricId)?)
   }() as none {
     postResponse()
   } else {

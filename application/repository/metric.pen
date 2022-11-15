@@ -3,4 +3,5 @@ import 'application'metric { Metric, MetricInput }
 type MetricRepository {
   Create \(MetricInput) none | error
   Find \(string) Metric | error
+  FindMany \() [Metric] | error
 }

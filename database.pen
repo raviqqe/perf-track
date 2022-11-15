@@ -1,3 +1,4 @@
+import Core'Number
 import Core'String
 import Sql'Context { Context }
 import Sql'Pool { Pool }
@@ -25,47 +26,70 @@ New = \(ctx Context, uri string) Database | error {
   }
 }
 
-Find = \(s Database, table string, where {string: Value}) {string: Value} | error {
-  ks = [string k for k, _ in where]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks) + " limit 1", [Value v for _, v in where])?
-
-  if [x, ..._] = xs {
-    buildValue(ks, x())
+Find = \(d Database, table string, fields [string], where {string: Value}) {string: Value} | error {
+  if [x, ..._] = Query(d, selectQuery(table, fields, [string k for k, _ in where]), fields, [Value v for _, v in where])? {
+    x()
   } else {
     error(table + " not found")
   }
 }
 
-FindMany = \(s Database, table string, where {string: Value}) [{string: Value}] | error {
-  ks = [string k for k, _ in where]
-  xs = Pool'Query(s.context, s.pool, findQuery(table, ks), [Value v for _, v in where])?
-
-  [{string: Value} buildValue(ks, x()) for x in xs]
-}
-
-findQuery = \(table string, ks [string]) string {
-  "select * from " + table + " where"
-    + String'Join([string k() + " = ?" for k in ks], " and ")
+FindMany = \(d Database, table string, fields [string], where {string: Value}) [{string: Value}] | error {
+  Query(d, selectQuery(table, fields, [string k for k, _ in where]), fields, [Value v for _, v in where])?
 }
 
 Create = \(s Database, table string, x {string: Value}) none | error {
   Pool'Execute(
     s.context,
     s.pool,
-    saveQuery(table, [string k for k, _ in x]),
+    insertQuery(table, [string k for k, _ in x]),
     [Value v for _, v in x],
   )?
 
   none
 }
 
-saveQuery = \(table string, ks [string]) string {
+Query = \(d Database, query string, fields [string], values [Value]) [{string: Value}] | error {
+  xs = Pool'Query(d.context, d.pool, query, values)?
+
+  [{string: Value} buildValue(fields, x()) for x in xs]
+}
+
+selectQuery = \(table string, fields [string], whereFields [string]) string {
+  "select "
+    + String'Join(fields, ", ")
+    + " from "
+    + table
+    + if size(whereFields) > 0 {
+      " where " + String'Join(placeholderMatches(whereFields, 1), " and ")
+    } else {
+      ""
+    }
+}
+
+insertQuery = \(table string, ks [string]) string {
   "insert into " + table
-    + "("
+    + " ("
     + String'Join(ks, ",")
     + ") values ("
-    + String'Join([string "?" for _ in ks], ",")
+    + String'Join(placeholders(ks, 1), ",")
     + ")"
+}
+
+placeholders = \(ks [string], i number) [string] {
+  if [_, ...ks] = ks {
+    [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
+  } else {
+    [string]
+  }
+}
+
+placeholderMatches = \(ks [string], i number) [string] {
+  if [k, ...ks] = ks {
+    [string k() + " = $" + Number'String(i), ...placeholders(ks, i + 1)]
+  } else {
+    [string]
+  }
 }
 
 buildValue = \(ks [string], vs [Value]) {string: Value} {
