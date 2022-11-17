@@ -1,6 +1,37 @@
-import 'application'record { Record }
+import Core'Number
+import Test'State { State }
 
-type RecordRepository {
-  Create \(Record) none | error
-  FindMany \(string) [Record] | error
+import 'application'record { Record }
+import 'application'repository'record { RecordRepository }
+
+New = \(s State) RecordRepository {
+  RecordRepository{
+    Create: \(r Record) none | error {
+      State'Set(s, [Record r, ...records(s)])
+    },
+    FindMany: \(metricId string) [Record] | error {
+      findRecords(records(s), metricId)
+    },
+  }
+}
+
+# TODO Use a list comprehension.
+findRecords = \(rs [Record], metricId string) [Record] {
+  if [r, ...rs] = rs {
+    if r().MetricId == metricId {
+      [Record r(), ...findRecords(rs, metricId)]
+    } else {
+      findRecords(rs, metricId)
+    }
+  } else {
+    [Record]
+  }
+}
+
+records = \(s State) [Record] {
+  if ms = State'Get(s) as [Record] {
+    ms
+  } else {
+    [Record]
+  }
 }

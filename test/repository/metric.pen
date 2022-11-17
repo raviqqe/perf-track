@@ -5,8 +5,6 @@ import 'application'metric { Metric, MetricInput }
 import 'application'repository'metric { MetricRepository }
 
 New = \(s State) MetricRepository {
-  ms = metrics(s)
-
   MetricRepository{
     Create: \(i MetricInput) none | error {
       ms = metrics(s)
