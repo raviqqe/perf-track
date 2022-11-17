@@ -1,0 +1,52 @@
+import Core'Number
+import Test'State { State }
+
+import 'application'metric { Metric, MetricInput }
+import 'application'repository'metric { MetricRepository }
+
+New = \(s State) MetricRepository {
+  ms = metrics(s)
+
+  MetricRepository{
+    Create: \(i MetricInput) none | error {
+      ms = metrics(s)
+      id = Number'String(size(ms))
+
+      State'Set(
+        s,
+        [Metric Metric{Id: id, Name: i.Name}, ...ms],
+      )
+    },
+    Find: \(id string) Metric | error {
+      if m = findMetric(metrics(s), id) as Metric {
+        m
+      } else {
+        error("metric " + id + " not found")
+      }
+    },
+    FindMany: \() [Metric] | error {
+      metrics(s)
+    },
+  }
+}
+
+# TODO Use a list comprehension.
+findMetric = \(ms [Metric], id string) Metric | none {
+  if [m, ...ms] = ms {
+    if m().Id == id {
+      m()
+    } else {
+      findMetric(ms, id)
+    }
+  } else {
+    none
+  }
+}
+
+metrics = \(s State) [Metric] {
+  if ms = State'Get(s) as [Metric] {
+    ms
+  } else {
+    [Metric]
+  }
+}
