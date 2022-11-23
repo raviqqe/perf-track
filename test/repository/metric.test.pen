@@ -58,9 +58,10 @@ FindManyTwo = \() none | error {
       r.Create(MetricInput{Name: "foo"})?
       r.Create(MetricInput{Name: "bar"})?
 
+      # TODO Fix ID check.
       Assert'Equal(
         r.FindMany()?,
-        [Metric Metric{Id: "42", Name: "bar"}, Metric{Id: "1", Name: "foo"}],
+        [Metric Metric{Id: "424242424242", Name: "bar"}, Metric{Id: "1", Name: "foo"}],
       )
     },
   )
