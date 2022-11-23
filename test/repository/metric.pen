@@ -8,7 +8,7 @@ New = \(s State) MetricRepository {
   MetricRepository{
     Create: \(i MetricInput) none | error {
       ms = metrics(s)
-      id = Number'String(size(ms))
+      id = Number'String(size(ms) + 1)
 
       State'Set(
         s,
