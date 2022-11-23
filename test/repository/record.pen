@@ -10,21 +10,10 @@ New = \(s State) RecordRepository {
       State'Set(s, [Record r, ...records(s)])
     },
     FindMany: \(metricId string) [Record] | error {
-      findRecords(records(s), metricId)
-    },
-  }
-}
+      rs = records(s)
 
-# TODO Use a list comprehension.
-findRecords = \(rs [Record], metricId string) [Record] {
-  if [r, ...rs] = rs {
-    if r().MetricId == metricId {
-      [Record r(), ...findRecords(rs, metricId)]
-    } else {
-      findRecords(rs, metricId)
-    }
-  } else {
-    [Record]
+      [Record r() for r in rs if r().MetricId == metricId]
+    },
   }
 }
 

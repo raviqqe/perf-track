@@ -16,8 +16,8 @@ New = \(s State) MetricRepository {
       )
     },
     Find: \(id string) Metric | error {
-      if m = findMetric(metrics(s), id) as Metric {
-        m
+      if [m, ..._] = [Metric m() for m in metrics(s) if m().Id == id] {
+        m()
       } else {
         error("metric " + id + " not found")
       }
@@ -25,19 +25,6 @@ New = \(s State) MetricRepository {
     FindMany: \() [Metric] | error {
       metrics(s)
     },
-  }
-}
-
-# TODO Use a list comprehension.
-findMetric = \(ms [Metric], id string) Metric | none {
-  if [m, ...ms] = ms {
-    if m().Id == id {
-      m()
-    } else {
-      findMetric(ms, id)
-    }
-  } else {
-    none
   }
 }
 
