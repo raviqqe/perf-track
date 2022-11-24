@@ -32,6 +32,7 @@ FindManyOne = \() none | error {
       r = defaultRecord()
       rr.Create(r)?
 
+      Assert'Equal(rr.FindMany("2")?, [Record])?
       Assert'Equal(rr.FindMany(r.MetricId)?, [Record r])
     },
   )
