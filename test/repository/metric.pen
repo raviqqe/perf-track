@@ -7,7 +7,7 @@ import 'application'repository'metric { MetricRepository }
 New = \(s State) MetricRepository {
   MetricRepository{
     Create: \(i MetricInput) none | error {
-      ms = metrics(s)
+      ms = getMetrics(s)
       id = Number'String(size(ms) + 1)
 
       State'Set(
@@ -16,19 +16,19 @@ New = \(s State) MetricRepository {
       )
     },
     Find: \(id string) Metric | error {
-      if [m, ..._] = [Metric m() for m in metrics(s) if m().Id == id] {
+      if [m, ..._] = [Metric m() for m in getMetrics(s) if m().Id == id] {
         m()
       } else {
         error("metric " + id + " not found")
       }
     },
     FindMany: \() [Metric] | error {
-      metrics(s)
+      getMetrics(s)
     },
   }
 }
 
-metrics = \(s State) [Metric] {
+getMetrics = \(s State) [Metric] {
   if ms = State'Get(s) as [Metric] {
     ms
   } else {

@@ -7,19 +7,21 @@ import 'application'repository'record { RecordRepository }
 New = \(s State) RecordRepository {
   RecordRepository{
     Create: \(r Record) none | error {
-      State'Set(s, [Record r, ...records(s)])
+      rs = getRecords(s)
+
+      State'Set(s, [Record r, ...rs])
     },
     FindMany: \(metricId string) [Record] | error {
-      rs = records(s)
+      rs = getRecords(s)
 
       [Record r() for r in rs if r().MetricId == metricId]
     },
   }
 }
 
-records = \(s State) [Record] {
-  if ms = State'Get(s) as [Record] {
-    ms
+getRecords = \(s State) [Record] {
+  if rs = State'Get(s) as [Record] {
+    rs
   } else {
     [Record]
   }
