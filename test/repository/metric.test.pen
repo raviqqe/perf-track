@@ -61,7 +61,7 @@ FindManyTwo = \() none | error {
       # TODO Fix ID check.
       Assert'Equal(
         r.FindMany()?,
-        [Metric Metric{Id: "424242424242", Name: "bar"}, Metric{Id: "1", Name: "foo"}],
+        [Metric Metric{Id: "424242424242", Name: "bar"}, Metric{Id: "hahahaha", Name: "foo"}],
       )
     },
   )
