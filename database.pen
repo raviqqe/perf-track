@@ -76,7 +76,7 @@ insertQuery = \(table string, ks [string]) string {
     + ")"
 }
 
-# TODO Use an indexed list comprehension.
+# TODO Use a parallel list comprehension.
 placeholders = \(ks [string], i number) [string] {
   if [_, ...ks] = ks {
     [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
@@ -85,7 +85,7 @@ placeholders = \(ks [string], i number) [string] {
   }
 }
 
-# TODO Use an indexed list comprehension.
+# TODO Use a parallel list comprehension.
 placeholderMatches = \(ks [string], i number) [string] {
   if [k, ...ks] = ks {
     [string k() + " = $" + Number'String(i), ...placeholders(ks, i + 1)]
