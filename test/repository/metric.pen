@@ -1,0 +1,37 @@
+import Core'Number
+import Test'State { State }
+
+import 'application'metric { Metric, MetricInput }
+import 'application'repository'metric { MetricRepository }
+
+New = \(s State) MetricRepository {
+  MetricRepository{
+    Create: \(i MetricInput) none | error {
+      ms = getMetrics(s)
+      id = Number'String(size(ms) + 1)
+
+      State'Set(
+        s,
+        [Metric Metric{Id: id, Name: i.Name}, ...ms],
+      )
+    },
+    Find: \(id string) Metric | error {
+      if [m, ..._] = [Metric m() for m in getMetrics(s) if m().Id == id] {
+        m()
+      } else {
+        error("metric " + id + " not found")
+      }
+    },
+    FindMany: \() [Metric] | error {
+      getMetrics(s)
+    },
+  }
+}
+
+getMetrics = \(s State) [Metric] {
+  if ms = State'Get(s) as [Metric] {
+    ms
+  } else {
+    [Metric]
+  }
+}

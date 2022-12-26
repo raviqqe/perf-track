@@ -1,0 +1,28 @@
+import Core'Number
+import Test'State { State }
+
+import 'application'record { Record }
+import 'application'repository'record { RecordRepository }
+
+New = \(s State) RecordRepository {
+  RecordRepository{
+    Create: \(r Record) none | error {
+      rs = getRecords(s)
+
+      State'Set(s, [Record r, ...rs])
+    },
+    FindMany: \(metricId string) [Record] | error {
+      rs = getRecords(s)
+
+      [Record r() for r in rs if r().MetricId == metricId]
+    },
+  }
+}
+
+getRecords = \(s State) [Record] {
+  if rs = State'Get(s) as [Record] {
+    rs
+  } else {
+    [Record]
+  }
+}

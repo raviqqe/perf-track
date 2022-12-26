@@ -1,0 +1,67 @@
+import Test'Assert
+import Test'State { State }
+
+import 'application'metric { Metric, MetricInput }
+import 'test'repository'metric as metricRepository
+
+Create = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      r = metricRepository'New(s)
+
+      r.Create(MetricInput{Name: "foo"})
+    },
+  )
+}
+
+Find = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      id = "1"
+      n = "foo"
+      r = metricRepository'New(s)
+
+      r.Create(MetricInput{Name: n})?
+
+      Assert'Equal(r.Find(id)?, Metric{Id: id, Name: n})
+    },
+  )
+}
+
+FindManyNone = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      r = metricRepository'New(s)
+
+      Assert'Equal(r.FindMany()?, [Metric])
+    },
+  )
+}
+
+FindManyOne = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      r = metricRepository'New(s)
+
+      r.Create(MetricInput{Name: "foo"})?
+
+      Assert'Equal(r.FindMany()?, [Metric Metric{Id: "1", Name: "foo"}])
+    },
+  )
+}
+
+FindManyTwo = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      r = metricRepository'New(s)
+
+      r.Create(MetricInput{Name: "foo"})?
+      r.Create(MetricInput{Name: "bar"})?
+
+      Assert'Equal(
+        r.FindMany()?,
+        [Metric Metric{Id: "2", Name: "bar"}, Metric{Id: "1", Name: "foo"}],
+      )
+    },
+  )
+}

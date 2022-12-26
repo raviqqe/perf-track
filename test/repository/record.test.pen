@@ -1,0 +1,61 @@
+import Test'Assert
+import Test'State { State }
+
+import 'application'record { Record }
+import 'test'repository'record as recordRepository
+
+Create = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      rr = recordRepository'New(s)
+
+      rr.Create(defaultRecord())
+    },
+  )
+}
+
+FindManyNone = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      rr = recordRepository'New(s)
+
+      Assert'Equal(rr.FindMany("1")?, [Record])
+    },
+  )
+}
+
+FindManyOne = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      rr = recordRepository'New(s)
+
+      r = defaultRecord()
+      rr.Create(r)?
+
+      Assert'Equal(rr.FindMany("2")?, [Record])?
+      Assert'Equal(rr.FindMany(r.MetricId)?, [Record r])
+    },
+  )
+}
+
+FindManyTwo = \() none | error {
+  State'Run(
+    \(s State) none | error {
+      rr = recordRepository'New(s)
+
+      r = defaultRecord()
+
+      rr.Create(r)?
+      rr.Create(r)?
+
+      Assert'Equal(
+        rr.FindMany(r.MetricId)?,
+        [Record r, r],
+      )
+    },
+  )
+}
+
+defaultRecord = \() Record {
+  Record{MetricId: "1", CommitHash: "foo", Time: 42}
+}
