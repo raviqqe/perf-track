@@ -61,7 +61,14 @@ selectQuery = \(table string, fields [string], whereFields [string]) string {
     + " from "
     + table
     + if size(whereFields) > 0 {
-      " where " + String'Join(placeholderMatches(whereFields, 1), " and ")
+      " where "
+        + String'Join(
+          [string
+            k() + " = $" + Number'String(i)
+            for k, i in whereFields, Number'Sequence(Number'Infinity())
+          ],
+          " and ",
+        )
     } else {
       ""
     }
@@ -72,7 +79,13 @@ insertQuery = \(table string, ks [string]) string {
     + " ("
     + String'Join(ks, ",")
     + ") values ("
-    + String'Join(placeholders(ks, 1), ",")
+    + String'Join(
+      [string
+        "$" + Number'String(i())
+        for ks, i in ks, Number'Sequence(Number'Infinity())
+      ],
+      ",",
+    )
     + ")"
 }
 
@@ -80,15 +93,6 @@ insertQuery = \(table string, ks [string]) string {
 placeholders = \(ks [string], i number) [string] {
   if [_, ...ks] = ks {
     [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
-  } else {
-    [string]
-  }
-}
-
-# TODO Use a parallel list comprehension.
-placeholderMatches = \(ks [string], i number) [string] {
-  if [k, ...ks] = ks {
-    [string k() + " = $" + Number'String(i), ...placeholders(ks, i + 1)]
   } else {
     [string]
   }
