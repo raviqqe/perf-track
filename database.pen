@@ -27,7 +27,7 @@ New = \(ctx Context, uri string) Database | error {
 }
 
 Find = \(d Database, table string, fields [string], where {string: Value}) {string: Value} | error {
-  if [x, ..._] = Query(d, selectQuery(table, fields, [string k for k, _ in where]), fields, [Value v for _, v in where])? {
+  if [x, ..._] = Query(d, selectQuery(table, fields, keys(where)), fields, values(where))? {
     x()
   } else {
     error(table + " not found")
@@ -35,16 +35,11 @@ Find = \(d Database, table string, fields [string], where {string: Value}) {stri
 }
 
 FindMany = \(d Database, table string, fields [string], where {string: Value}) [{string: Value}] | error {
-  Query(d, selectQuery(table, fields, [string k for k, _ in where]), fields, [Value v for _, v in where])?
+  Query(d, selectQuery(table, fields, keys(where)), fields, values(where))?
 }
 
 Create = \(s Database, table string, x {string: Value}) none | error {
-  Pool'Execute(
-    s.context,
-    s.pool,
-    insertQuery(table, [string k for k, _ in x]),
-    [Value v for _, v in x],
-  )?
+  Pool'Execute(s.context, s.pool, insertQuery(table, keys(x)), values(x))?
 
   none
 }
@@ -61,7 +56,14 @@ selectQuery = \(table string, fields [string], whereFields [string]) string {
     + " from "
     + table
     + if size(whereFields) > 0 {
-      " where " + String'Join(placeholderMatches(whereFields, 1), " and ")
+      " where "
+        + String'Join(
+          [string
+            k() + " = $" + Number'String(i())
+            for k, i in whereFields, Number'Sequence(Number'Infinity())
+          ],
+          " and ",
+        )
     } else {
       ""
     }
@@ -72,7 +74,13 @@ insertQuery = \(table string, ks [string]) string {
     + " ("
     + String'Join(ks, ",")
     + ") values ("
-    + String'Join(placeholders(ks, 1), ",")
+    + String'Join(
+      [string
+        "$" + Number'String(i())
+        for ks, i in ks, Number'Sequence(Number'Infinity())
+      ],
+      ",",
+    )
     + ")"
 }
 
@@ -80,15 +88,6 @@ insertQuery = \(table string, ks [string]) string {
 placeholders = \(ks [string], i number) [string] {
   if [_, ...ks] = ks {
     [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
-  } else {
-    [string]
-  }
-}
-
-# TODO Use a parallel list comprehension.
-placeholderMatches = \(ks [string], i number) [string] {
-  if [k, ...ks] = ks {
-    [string k() + " = $" + Number'String(i), ...placeholders(ks, i + 1)]
   } else {
     [string]
   }
