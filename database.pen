@@ -84,15 +84,7 @@ insertQuery = \(table string, ks [string]) string {
     + ")"
 }
 
-# TODO Use a parallel list comprehension.
-placeholders = \(ks [string], i number) [string] {
-  if [_, ...ks] = ks {
-    [string "$" + Number'String(i), ...placeholders(ks, i + 1)]
-  } else {
-    [string]
-  }
-}
-
+# TODO Use a map comprehension.
 buildValue = \(ks [string], vs [Value]) {string: Value} {
   if [k, ...ks] = ks {
     if [v, ...vs] = vs {
