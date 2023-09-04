@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
       - uses: Homebrew/actions/setup-homebrew@master
       - run: brew install pen-lang/pen/pen
@@ -16,7 +16,7 @@ jobs:
   test:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: Swatinem/rust-cache@v2
       - uses: Homebrew/actions/setup-homebrew@master
       - run: brew install pen-lang/pen/pen
@@ -24,19 +24,19 @@ jobs:
   format:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: Homebrew/actions/setup-homebrew@master
       - run: brew install pen-lang/pen/pen
       - run: pen format --check
   spell_check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: streetsidesoftware/cspell-action@main
         with:
           files: "**/*.{md,pen,sh}"
   readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: npx markdown-link-check README.md
