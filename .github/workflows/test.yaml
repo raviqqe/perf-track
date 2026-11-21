@@ -4,35 +4,30 @@ on:
     branches:
       - main
   pull_request:
-env:
-  # HACK Ignore Pen's Rust toolchain files, which make parallel FFI builds race on installing targets.
-  RUSTUP_TOOLCHAIN: stable
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
-      - uses: homebrew/actions/setup-homebrew@082c94ee19e776205cfa8e43802917d1425e2fe7 # main
-      - run: brew trust pen-lang/pen
-      - run: brew install pen-lang/pen/pen
+        with:
+          submodules: true
+      - uses: ./.github/actions/setup
       - run: pen build
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
-      - uses: homebrew/actions/setup-homebrew@082c94ee19e776205cfa8e43802917d1425e2fe7 # main
-      - run: brew trust pen-lang/pen
-      - run: brew install pen-lang/pen/pen
+        with:
+          submodules: true
+      - uses: ./.github/actions/setup
       - run: pen test
   format:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: homebrew/actions/setup-homebrew@082c94ee19e776205cfa8e43802917d1425e2fe7 # main
-      - run: brew trust pen-lang/pen
-      - run: brew install pen-lang/pen/pen
+        with:
+          submodules: true
+      - uses: ./.github/actions/setup
       - run: pen format --check
   spell_check:
     runs-on: ubuntu-latest
