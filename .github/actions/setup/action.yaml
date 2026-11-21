@@ -5,10 +5,10 @@ outputs: {}
 runs:
   using: composite
   steps:
-    - uses: swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+    - uses: swatinem/rust-cache@v2.9.3
       with:
         workspaces: .vendor/pen
-    - uses: homebrew/actions/setup-homebrew@61b401267256bb9c047d6d1481b176d5772a0ba7 # main
+    - uses: homebrew/actions/setup-homebrew@main
     - run: brew install llvm@23
       shell: bash
     - run: echo $(brew --prefix)/opt/llvm@23/bin >> $GITHUB_PATH
