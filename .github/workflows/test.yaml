@@ -8,36 +8,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: true
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: pen build
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: true
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: pen test
   format:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
         with:
           submodules: true
-      - uses: ./.github/actions/setup
+      - uses: $/.github/actions/setup
       - run: pen format --check
   spell_check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: streetsidesoftware/cspell-action@6f3c77c1406bc930f944ba97e9801a22e42caf58 # v9.1.0
+      - uses: actions/checkout@v7.0.1
+      - uses: streetsidesoftware/cspell-action@v9.1.0
         with:
           files: "**/*.{md,pen,sh}"
   readme:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7.0.1
       - run: npx markdown-link-check README.md
