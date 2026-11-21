@@ -1,0 +1,20 @@
+name: setup
+description: Sets up Pen
+inputs: {}
+outputs: {}
+runs:
+  using: composite
+  steps:
+    - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+      with:
+        workspaces: .vendor/pen
+    - uses: homebrew/actions/setup-homebrew@082c94ee19e776205cfa8e43802917d1425e2fe7 # main
+    - run: brew install llvm@23
+      shell: bash
+    - run: echo $(brew --prefix)/opt/llvm@23/bin >> $GITHUB_PATH
+      shell: bash
+    - run: cargo install --locked --path cmd/pen
+      shell: bash
+      working-directory: .vendor/pen
+    - run: echo PEN_ROOT=$PWD/.vendor/pen >> $GITHUB_ENV
+      shell: bash
